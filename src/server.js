@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rutas principales
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Servidor funcionando correctamente 🚀',
     version: '1.0.0',
     endpoints: {
@@ -38,14 +38,14 @@ import pool from './config/db.js';
 app.get('/test-db', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT NOW() AS now');
-    res.json({ 
-      message: 'Conexión a la base de datos exitosa ✅', 
+    res.json({
+      message: 'Conexión a la base de datos exitosa ✅',
       serverTime: rows[0].now,
       database: process.env.DB_NAME
     });
   } catch (error) {
     console.error('Error al conectar con la BD:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Error al conectar con la base de datos ❌',
       details: error.message
     });
@@ -63,16 +63,17 @@ const startServer = async () => {
     console.log('🔧 Inicializando base de datos...');
     await initUserTable();
     await initProductTable();
-    
+
     // Seed inicial
     await seedDatabase();
-    
+
     // Iniciar servidor
     const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => {
+
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`✅ Servidor corriendo en el puerto ${PORT}`);
-      console.log(`🌍 URL: http://localhost:${PORT}`);
-      console.log(`📊 Test DB: http://localhost:${PORT}/test-db`);
+      console.log(`🌍 URL pública: http://0.0.0.0:${PORT}`);
+      console.log(`📊 Test DB: http://0.0.0.0:${PORT}/test-db`);
     });
   } catch (error) {
     console.error('❌ Error al iniciar el servidor:', error);
